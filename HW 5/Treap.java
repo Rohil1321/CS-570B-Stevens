@@ -16,9 +16,7 @@ import java.util.*;
 public class Treap<E extends Comparable<E>> 
 {
 	/**
-	 * 
 	 * @author Romil_V._Shah - 20008692
-	 * 
 	 * @param <E>
 	 */
 	
@@ -26,7 +24,7 @@ public class Treap<E extends Comparable<E>>
 	{
 		public E data;
 		
-		public int priority;
+		public int rank;
 		
 		public Node<E> left;
 		public Node<E> right;
@@ -35,20 +33,20 @@ public class Treap<E extends Comparable<E>>
 		/**
 		 * This is the node constructor. We use it to initialize all the required variables and to check if data is null.
 		 * @param data
-		 * @param priority
+		 * @param rank
 		 */
-		public Node(E data,int priority) 
+		public Node(E data,int rank) 
 		{
-			if(data==null)
+			if(data == null)
 			{
 				throw new NoSuchElementException("Data is Null");
 			}
 			else 
 			{
-				this.data=data;
-				this.priority=priority;
-				this.left=null;
-				this.right=null;
+				this.data = data;
+				this.rank = rank;
+				this.left = null;
+				this.right = null;
 			}
 		}
 		
@@ -60,30 +58,31 @@ public class Treap<E extends Comparable<E>>
 		 */
 		Node<E> rotateRight()
 		{
-			Node<E> a=new Node<E>(this.data,this.priority);
+			Node<E> a = new Node<E>(this.data, this.rank);
 			
-			if (this.left!=null) 
+			if (this.left != null) 
 			{
-				if(this.right!=null) 
+				if(this.right != null) 
 				{
-					a.right=this.right;
-				}
-				if(this.left.right!=null) 
-				{
-					a.left=this.left.right;
+					a.right = this.right;
 				}
 				
-				this.priority=this.left.priority;
+				if(this.left.right != null) 
+				{
+					a.left = this.left.right;
+				}
+				
+				this.rank=this.left.rank;
 				this.data=this.left.data;
 				this.right=a;
 
-				if(this.left.left!=null) 
+				if(this.left.left != null) 
 				{
-					this.left=this.left.left;
+					this.left = this.left.left;
 				} 
 				else 
 				{
-					this.left=null;
+					this.left = null;
 				}
 			}
 			return a;		
@@ -97,30 +96,31 @@ public class Treap<E extends Comparable<E>>
 		 */
 		Node<E> rotateLeft()
 		{
-			Node<E> a=new Node<E>(this.data,this.priority);
+			Node<E> a=new Node<E>(this.data, this.rank);
 			
-			if(this.right!=null) 
+			if(this.right != null) 
 			{
-				if(this.left!=null) 
+				if(this.left != null) 
 				{
-					a.left=this.left;
-				}
-				if(this.right.left!=null) 
-				{
-					a.right=this.right.left;
+					a.left = this.left;
 				}
 				
-				this.priority=this.right.priority;
-				this.data=this.right.data;
-				this.left=a;
-				
-				if(this.right.right!=null) 
+				if(this.right.left != null) 
 				{
-					this.right=this.right.right;
+					a.right = this.right.left;
+				}
+				
+				this.rank = this.right.rank;
+				this.data = this.right.data;
+				this.left = a;
+				
+				if(this.right.right != null) 
+				{
+					this.right = this.right.right;
 				} 
 				else 
 				{
-					this.right=null;
+					this.right = null;
 				}
 			}
 			return a;
@@ -136,30 +136,30 @@ public class Treap<E extends Comparable<E>>
 		}
 	}
 	
-	private Random priorityGenerator;
+	private Random prioGen;
 	private Node<E> root;
 	
 	
 	/**
 	 * This is a constructor for the Treap class.
-	 * It initializes the random priorityGenerator variable.
+	 * It initializes the random prioGen variable.
 	 */
 	public Treap() 
 	{
-		priorityGenerator=new Random();
-		root=null;
+		prioGen = new Random();
+		root = null;
 	}
 	
 	
 	/**
 	 *This is a constructor for the Treap class.
-	 * It initializes the random priorityGenerator variable with a certain seed value.
+	 * It initializes the random prioGen variable with a certain seed value.
 	 * @param seed
 	 */
 	public Treap(long seed) 
 	{
-		priorityGenerator=new Random(seed);
-		root=null;
+		prioGen = new Random(seed);
+		root = null;
 	}
 	
 	
@@ -171,7 +171,7 @@ public class Treap<E extends Comparable<E>>
 	 */
 	public boolean add(E key)
 	{
-		return add(key,priorityGenerator.nextInt());	
+		return add(key, prioGen.nextInt());	
 	}
 	
 	
@@ -181,52 +181,53 @@ public class Treap<E extends Comparable<E>>
 	 * @param priority
 	 * @return
 	 */
-	public boolean add(E key,int priority) 
+	public boolean add(E key, int priority) 
 	{
-		Node<E> a=root;
+		Node<E> a = root;
 		
-		Stack<Node<E>> s=new Stack<Node<E>>();
+		Stack<Node<E>> s = new Stack<Node<E>>();
 		
-		if(root==null) 
+		if(root == null) 
 		{
-			root=new Node<E>(key,priority);
+			root = new Node<E>(key, priority);
 			return true;
 		}
 		
-		while(a!=null) 
+		while(a != null) 
 		{
 			s.push(a);
-			if(a.data.compareTo(key)==0) 
+			
+			if(a.data.compareTo(key) == 0) 
 			{
 				return false;
 			}
-			else if(a.data.compareTo(key)<0) 
+			else if(a.data.compareTo(key) < 0) 
 			{
-				a=a.right;
+				a = a.right;
 			}
 			else 
 			{
-				a=a.left;
+				a = a.left;
 			}
 		}
 		
-		a=s.peek();
+		a = s.peek();
 		
 		if(a.data.compareTo(key)<0) 
 		{
-			Node<E> b=new Node<E>(key,priority);
-			s.peek().right=b;
+			Node<E> b = new Node<E>(key, priority);
+			s.peek().right = b;
 			s.push(b);
 		}
 		else 
 		{
-			Node<E> b=new Node<E>(key,priority);
-			s.peek().left=b;
+			Node<E> b = new Node<E>(key, priority);
+			s.peek().left = b;
 			s.push(b);
 		}
 		
-		Node<E> b=s.pop();
-		reheap(s,b);
+		Node<E> b = s.pop();
+		reheap(s, b);
 		
 		return true;
 	}
@@ -239,11 +240,11 @@ public class Treap<E extends Comparable<E>>
 	 */
 	private void reheap(Stack<Node<E>> s,Node<E> b) 
 	{
-		Node<E> a=s.pop();
+		Node<E> a = s.pop();
 		
-		while(a!=null&&a.priority<b.priority) 
+		while(a != null && a.rank < b.rank) 
 		{
-			if(b.data.compareTo(a.data)<0) 
+			if(b.data.compareTo(a.data) < 0) 
 			{
 				a.rotateRight();
 				
@@ -252,7 +253,7 @@ public class Treap<E extends Comparable<E>>
 					return;
 				}
 				
-				a=s.pop();
+				a = s.pop();
 			}
 			else 
 			{
@@ -263,7 +264,7 @@ public class Treap<E extends Comparable<E>>
 					return;
 				}
 				
-				a=s.pop();
+				a = s.pop();
 			}
 		}
 	}
@@ -277,61 +278,61 @@ public class Treap<E extends Comparable<E>>
 	 */
 	public boolean delete(E key)
 	{
-		if(find(key)!=true) 
+		if(find(key) != true) 
 		{
 			return false;
 		}
 		else 
 		{
-			Node<E> d=root;
-			Node<E> a=null;
+			Node<E> d = root;
+			Node<E> a = null;
 			
-	        while(d.data.compareTo(key)!=0)
+	        while(d.data.compareTo(key) != 0)
 	        {
 	            a=d;
-	            if(d.data.compareTo(key)<0) 
+	            if(d.data.compareTo(key) < 0) 
 	            {
-	                d=d.right;
+	                d = d.right;
 	            }
 	            else 
 	            {
-	            	d=d.left;
+	            	d = d.left;
 	            }
 	        }
 	        
-	        while(!(d.left==null&&d.right==null)) 
+	        while(!(d.left == null && d.right == null)) 
 	        {
-	        	a=d;
+	        	a = d;
 	        	
-	        	if(d.right==null) 
+	        	if(d.right == null) 
 	        	{
-	        		d=d.rotateRight();	        	
+	        		d = d.rotateRight();	        	
 	        	}
-	        	else if(d.left==null) 
+	        	else if(d.left == null) 
 	        	{
-	        		d=d.rotateLeft();
+	        		d = d.rotateLeft();
 	        	}
-	        	else if(d.left.priority<d.right.priority) 
+	        	else if(d.left.rank < d.right.rank) 
 	        	{
-	        		d=d.rotateLeft();
+	        		d = d.rotateLeft();
 	        	}
 	        	else 
 	        	{
-	        		d=d.rotateRight();
+	        		d = d.rotateRight();
 	        	}
 	        }
 	        
-	        if(root.data.compareTo(key)==0&&root.right==null&&root.left==null) 
+	        if(root.data.compareTo(key) == 0 && root.right == null && root.left == null) 
 	        {
-	        	root=null;
+	        	root = null;
 	        }
-	        else if(a.right!=null&&a.right.data.compareTo(key)==0) 
+	        else if(a.right != null && a.right.data.compareTo(key) == 0) 
 	        {
-	        	a.right=null;
+	        	a.right = null;
 	        }
 	        else 
 	        {
-	        	a.left=null;
+	        	a.left = null;
 	        }
 	        
 	        return true;
@@ -346,12 +347,12 @@ public class Treap<E extends Comparable<E>>
 	 */
 	public boolean find(E key) 
 	{
-		if(key==null)
+		if(key == null)
 		{
 			throw new NoSuchElementException("Key is Null");
 		}
 		
-		return find(root,key);
+		return find(root, key);
 	}
 	
 	
@@ -364,21 +365,21 @@ public class Treap<E extends Comparable<E>>
 	 */
 	private boolean find(Node<E> root,E key) 
 	{
-		if(root==null)
+		if(root == null)
 		{
 			return false;
 		}
-		else if(key.compareTo(root.data)==0) 
+		else if(key.compareTo(root.data) == 0) 
 		{
 			return true;
 		}
-		else if(key.compareTo(root.data)<0) 
+		else if(key.compareTo(root.data) < 0) 
 		{
 			return find(root.left, key);
 		}
 		else 
 		{
-			return find(root.right,key);
+			return find(root.right, key);
 		}
 	}
 	
@@ -390,7 +391,7 @@ public class Treap<E extends Comparable<E>>
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		preOrderTraverse(root,1,sb);
+		preOrderTraverse(root, 1, sb);
 		
 		return sb.toString();
 	}
@@ -416,10 +417,10 @@ public class Treap<E extends Comparable<E>>
 		}
 		else 
 		{
-			sb.append("(The Key = " + currentNode.toString() + ", Its Priority = " + currentNode.priority + ")\n");
+			sb.append("(The Key = " + currentNode.toString() + ", Its Priority = " + currentNode.rank + ")\n");
 			
-			preOrderTraverse(currentNode.left,depth+1,sb);
-			preOrderTraverse(currentNode.right,depth+1,sb);
+			preOrderTraverse(currentNode.left, depth + 1, sb);
+			preOrderTraverse(currentNode.right, depth + 1, sb);
 		}
 	}
 	
@@ -454,6 +455,6 @@ public class Treap<E extends Comparable<E>>
 		System.out.println("\nDeleting if Element Exists at Key 5. ==> " + testTree.delete(5) + "\n\n");
 		// Performing a delete operation if element exists at the given Key
 		
-		System.out.println("The Tree after the changes ===> \n\n" + testTree.toString());
+		System.out.println("The Tree after the Delete Operations ===> \n\n" + testTree.toString());
 	}
 }

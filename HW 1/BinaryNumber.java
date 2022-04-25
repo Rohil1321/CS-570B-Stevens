@@ -1,190 +1,209 @@
 //Romil Vimalbhai Shah
+//20008692
+//CS 570 B
+//Homework 1 
 
-import java.util.*;
+package BN_HW1;
+
+import java.util.Arrays;
 
 public class BinaryNumber 
 {
-	public int data[];
-	public boolean overflow;
+	private int data[];
+	private boolean overflow;
 	
-//A constructor BinaryNumber is taken for getting the length of binary number and consisting only of zeros.
-	
-	public BinaryNumber(int length)
+	// Here for the given length the constructor stores a binary number filled with 0's in the data array
+	public BinaryNumber(int length) 
 	{
-		data=new int[length];
-		for(int i=0;i<length;i++) 
-		{
-		  System.out.print(data[i]);
-		}
-	}
-	
-// A constructor BinaryNumber (str) is taken for creating a binary number of given string for which the corresponding binary number should be created.
-	
-	public BinaryNumber(String str)
-	{ 
-	  System.out.print('\n');
-	  data=new int[str.length()];
-		for(int i=0;i<str.length(); i++)
-		{
-			char C = str.charAt(i);
-			data[i]=java.lang.Character.getNumericValue(str.charAt(i));
-		}
-	}
-
-// The method getLength() is for determining the length of a binary number. 
-	
-	public int getLength()
-	{
-		return data.length;
+		data= new int [length];
 		
+		for(int i=0; i<length; i++)
+		{   
+			data[i]=0;
+		}
 	}
 	
-// The method getDigit(int index) is used for obtaining a digit of a binary number of given index.
 	
+	// The input given in the string format is converted to the numeric value and stored in the data array
+	public BinaryNumber(String str) 
+	{
+		data=new int [str.length()];
+		
+		for (int i = 0; i < str.length(); i++) 
+		{
+            char ch = str.charAt(i);
+            data[i]= Character.getNumericValue(ch);
+        }
+ 
+	}
+	
+	
+	// This method is used to get the length of the data array	
+	public int getLength() 
+	{
+		int length=data.length;
+		return length;
+	}
+	
+	
+	// Here the length of the data array is first checked and then if it is out of bounds
+	// the message is printed otherwise the digit at the given index is returned
 	public int getDigit(int index) 
 	{
-		if(index >=data.length) 
-		{	
-			System.out.println("the index is out of bounds");
-			return -1;
-		}	
-		else
-			return data[index];
-	}
-	
-// The method shiftR(int amount) is used for shifting all the digits in a binary number.
-	
-	 public void shiftR(int amount)
-	 {
-		 int shifted_data[] =new int[amount+ data.length];
-		 int j=0;
-		 for(int i=amount;i<shifted_data.length;i++) 
-			{
-			 shifted_data[i]=data[j];
-			 j++;
-			 
-			 }
-		 System.out.print("The rightshifted binary number:");
-		 for(int i=0;i<shifted_data.length;i++) 
-			{
-			 System.out.print(shifted_data[i]);
-		    }
-		 data = shifted_data;
-     }
-	 
-//Addition of two Binary Numbers.	 
-	 
-	 public void add(BinaryNumber aBinaryNumber)
-	 {
-		 if(this.getLength() != aBinaryNumber.getLength()) {
-			 throw new IllegalArgumentException("Length cannot be different");
-		 }
-		 int fn=0;
-		 int sn=0;
-		 int carry=0;
-		 
-		 for(int i=0; i<aBinaryNumber.getLength(); i++)
-		   {
-			fn=this.getDigit(i);
-			sn=aBinaryNumber.getDigit(i);
-			if(fn==0 && sn==0)
-			{
-				data[i]=0+carry;
-				carry=0;
-			}
-			else if(fn==0 && sn==1 ||  fn==1 && sn==0)
-			{
-				if(carry==1)
-				{
-					data[i]=0;
-					carry=1;
-				}
-				else
-				{
-					data[i]=1;
-					carry=0;
-				}
-			}
-			else
-			{
-				if(carry==1)
-				{
-					data[i]=1;
-					carry=1;
-					overflow=true;
-				}
-				else
-				{
-					data[i]=0;
-					carry=1;
-					overflow=true;
-				}
-			}
-		 }
-		 if(carry==1) {
-			 overflow=true;
-			 System.out.println("Overflow");
-			 }
-		 else 
-		 {
-			 overflow=false;
-		 System.out.print("The addition of a binary number is:"+toString());		  
-		 }
-	 }
-
-
-	 
-//Method toString() is used for transforming a binary number to a String.
-	 
-	 public String toString() 
-	 {
-		 if(overflow==true) 
-		 {
-			 return "Overflow";
-		 }
-		 else 
-		 {
-			 String st=" ";
-			 for(int i=0;i<data.length;i++) 
-			 {
-				 st=st+data[i]; 
-			 }
-			 return st;
-		 }  
-	 }
-	 
-//This method toDecimal() returns the decimal number for a given binary number.
-		
-	public int toDecimal()
-	{
-		int add= 0,j=0; 
-		
-		for(int i = 0; i <data.length; i++)
+		if (index < 0 || index >= data.length) 
 		{
-			add = (int)(add + (data[i] * Math.pow(2,j)));
-			j++;
+		    System.out.println("The index which is out of bounds is:");
+		    return index;
 		}
-		return add;
+		else 
+		{
+			int digit = data[index];
+			return digit;
+		}
+		
 	}
-	 
-//This method clearOverflow() clears the overflow flag.
-		 
-	public void clearOverflow()
+	
+	
+	// Here another array is taken to reallocate the data array and create space for the new elements to be added and 
+	// the the nested for loop is used to rotate the array by the amount that is given
+	public void shitfR(int amount) 
+	{
+		int reallocate[]=Arrays.copyOf(data,amount+data.length);
+		
+		int temp,last;
+		
+		for(int i=0; i<amount; i++) 
+		{
+			//System.arraycopy(reallocate, i, reallocate, i+1, reallocate.length-i-1); 
+			// This can be used instead of the nested for loops
+			
+			last = reallocate[reallocate.length-1];
+	        
+			for (int j = 0; j < reallocate.length; j++) 
+			{
+				temp = reallocate[j];
+				
+	            reallocate[j] = last;
+	            
+	            last = temp;
+	        }
+		} 
+		data=reallocate;
+		
+		System.out.println(Arrays.toString(data));
+	}
+	
+	
+	// This method adds the 2 binary numbers, before adding the 2 numbers it checks if they are of the same length. 
+	// If they are not it prints the message or else it will add the 2 binary numbers and 
+	// store the result in the data array of the calling object
+	public void add(BinaryNumber aBinaryNumber) 
+	{
+		int carry=0;
+		
+		if (data.length != aBinaryNumber.data.length) 
+		{
+			System.out.println("Length is not Equal");
+		}
+		else 
+		{
+			for(int i=0; i<data.length; i++) 
+			{
+				int sum=data[i]+aBinaryNumber.data[i]+carry;
+				
+				if (sum == 1) 
+				{
+					data[i]=sum;
+					carry=0;
+					overflow=false;
+				}
+				else if (sum==2) 
+				{
+					data[i]=0;
+					carry=1;
+					overflow = true;
+				}
+				else if (sum==3) 
+				{
+					data[i]=1;
+					carry=1;
+					overflow = true;
+				}
+				else 
+				{
+					data[i]=sum+carry;
+				}
+			}
+		}
+	}
+	
+	
+	// If the overflow condition is reached while adding the binary numbers the overflow  string is printed as overflow will be true, 
+	// otherwise it will return the data array which stores the result of the binary addition
+	public String toString() 
+	{
+		if(overflow == true) 
+		{
+			return "Overflow";
+		}
+		else 
+		{
+			String value = "";
+			
+			for(int i:data) 
+			{
+					value = value + i + ' ';
+			}
+			return value;
+			//return Arrays.toString(data);
+		}
+	}
+	
+	
+	//It takes the binary number stored in the data array and converts it to the decimal equivalent number using the given sum formula
+	public int toDecimal() 
+	{
+		int sum = 0;
+		
+		for (int i = 0; i < data.length; i++) 
+		{
+			sum = (int) ((Math.pow(2, i) * data[i]) + sum);
+		}
+		
+		return sum;
+	}
+	
+	//This method is used to clear the boolean value in the overflow variable
+	public void clearOverflow() 
 	{
 		overflow=false;
 	}
-//The main part of program to call all the methods in the program.
-	 
-	public static void main(String[] args)
+	
+	
+	public static void main(String[] args) 
 	{
-		BinaryNumber bn= new BinaryNumber(4);
-		BinaryNumber rs= new BinaryNumber("10101");
-		System.out.println("The length of the binary number:"+rs.getLength());
-		System.out.println("The digit of a binary number given an index:"+rs.getDigit(3));
-		System.out.println("Transformation of a binary number to its decimal notation:"+rs.toDecimal());
-	    rs.shiftR(2);
-	    BinaryNumber rs1= new BinaryNumber("1001000"); 
-	    rs.add(rs1);
-	   
+		BinaryNumber b1 = new BinaryNumber("01110");
+		BinaryNumber b2 = new BinaryNumber("11110"); 
+		
+		System.out.println("The 1st Binary Number is ===> " + b1);
+		
+		System.out.println("The 2nd Binary Number is ===> " + b2);
+		
+		System.out.println("\nBinary Number ' " + b1 + "' in Decimals ===> " + b1.toDecimal());
+		System.out.println("Binary Number ' " + b2 + "' in Decimals ===> " + b2.toDecimal());
+		
+		System.out.println("\nLength of Binary Number ' " + b1 + "' ===> " + b1.getLength());
+		
+		System.out.println("\nThe 3rd Digit in Binary Number' " + b1 + "' is ===> " + b1.getDigit(3));
+		
+		System.out.println("\nAdding 2nd Binary Number ' " + b2 + "' into the 1st Binary Number ' " + b1 + "'");
+		b1.add(b2);
+		
+		System.out.println("The 1st Binary Number after addition is ===> " + b1);
+		
+		System.out.println("\nThe Binary Number ' " + b1 + "' after shifting 6 digits to the rigit ===> ");
+		b1.shitfR(6);
+		
+		System.out.println("\nThe 1st Binary Number after shiftR Operation is ===> " + b1);
 	}
 }
